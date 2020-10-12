@@ -1,0 +1,73 @@
+---
+title: "R Notebook"
+output:
+  word_document: default
+  html_notebook: default
+---
+
+Q10.10
+
+```{r}
+require(ISLR)
+library(ggfortify)
+  library(ggplot2)
+  library(readr)
+  library(dplyr)
+  library(tidyr)
+  library(viridis)
+  library(ggthemes)
+  library(ggalt)
+```
+
+```{r}
+body_data_orig= read.table("physical.txt",
+  sep="\t", header=TRUE)
+body_data_cubert=data.frame(body_data_orig)
+```
+
+a)
+
+```{r}
+model= lm(body_data_orig$Mass~ body_data_orig$Fore+body_data_orig$Bicep+body_data_orig$Chest+body_data_orig$Neck+body_data_orig$Shoulder+body_data_orig$Waist+body_data_orig$Height+body_data_orig$Calf+body_data_orig$Thigh+body_data_orig$Head, data=body_data_orig)
+
+summary(model)
+```
+
+```{r}
+autoplot(model,which = 1:6, ncol = 3, label.size = 3)
+```
+
+b)
+
+```{r}
+print(body_data_orig$Mass)
+```
+
+
+```{r}
+body_data_cubert$Mass ='^'(body_data_cubert$Mass,1/3)
+model_cube_rt= lm(body_data_cubert$Mass~ body_data_orig$Fore+body_data_orig$Bicep+body_data_orig$Chest+body_data_orig$Neck+body_data_orig$Shoulder+body_data_orig$Waist+body_data_orig$Height+body_data_orig$Calf+body_data_orig$Thigh+body_data_orig$Head, data=body_data_orig)
+
+summary(model_cube_rt)
+```
+
+```{r}
+autoplot(model_cube_rt)
+```
+
+```{r}
+model_cube_rt_res = resid(model_cube_rt)
+fitted_cube_model='^'(fitted(model_cube_rt),3)
+```
+
+```{r}
+ plot(fitted_cube_model, residuals(model_cube_rt), 
+    ylab="Residuals", xlab="Fitted", 
+    main="Residual vs Fitted ") 
+abline(0, 0)
+
+
+
+```
+
+

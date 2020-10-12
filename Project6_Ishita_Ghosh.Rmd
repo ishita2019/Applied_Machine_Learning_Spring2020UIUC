@@ -1,0 +1,88 @@
+---
+title: "R Notebook"
+output:
+  word_document: default
+  html_notebook: default
+---
+
+Q10.9
+```{r}
+require(ISLR)
+require(CRAN)
+library(ggfortify)
+  library(ggplot2)
+  library(readr)
+  library(dplyr)
+  library(tidyr)
+  library(viridis)
+  library(ggthemes)
+  library(ggalt)
+```
+
+```{r}
+blood_data_orig= read.table("brunhild.txt",
+  sep="\t", header=TRUE)
+blood_data_log=data.frame(blood_data_orig)
+```
+
+```{r}
+plot(blood_data_orig)
+
+```
+
+```{r}
+plot(blood_data_orig, log="xy")
+```
+```{r}
+plot(log(blood_data_log$Sulfate)~log(blood_data_log$Hours))
+```
+
+```{r}
+log_y=log(blood_data_log$Sulfate)
+log_x=log(blood_data_log$Hours)
+log_linear_regression_model= lm(log_y~log_x, data=blood_data_log)
+summary(log_linear_regression_model)
+```
+
+
+
+
+
+10.9 a)
+
+```{r}
+plot(log(blood_data_log$Sulfate)~log(blood_data_log$Hours),data=blood_data_log)
+abline(log_linear_regression_model, col=3)
+```
+
+b)
+
+
+```{r}
+ggplot(blood_data_log, aes(x = blood_data_log$Hours, y = blood_data_log$Sulfate)) +
+    geom_jitter(alpha = 0.5) +
+    geom_line(data = data.frame(x = exp(log_linear_regression_model$model$log_x),
+                                y = exp(predict(log_linear_regression_model))),
+              aes(x = x, y = y),
+              color = viridis(1, end = 0), size = 0.7, linetype="solid")  +
+    theme_base()
+```
+
+
+c)
+
+```{r}
+autoplot(log_linear_regression_model, which = 1:6, ncol = 3, label.size = 3)
+```
+
+
+
+
+```{r}
+y_hat= exp(predict(log_linear_regression_model))
+residuals_calculated= blood_data_orig$Sulfate-y_hat
+plot(y_hat,residuals_calculated ,
+    ylab="Residuals", xlab="Fitted Values", 
+    main="Residual vs Fitted Value ") 
+```
+
